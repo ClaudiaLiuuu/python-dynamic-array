@@ -123,7 +123,7 @@ class DynamicArrayTestCase(unittest.TestCase):
         """Test correct number of occurrences is returned"""
         self.arr.append(self._INITIAL_SIZE - 1)
         self.assertEqual(self.arr.count(self._INITIAL_SIZE - 1), 2)
-        self.assertEqual(self.arr.count(0, 1))
+        self.assertEqual(self.arr.count(0), 1)
         self.assertEqual(self.arr.count(self._INITIAL_SIZE), 0)
 
     def test_sort(self):
