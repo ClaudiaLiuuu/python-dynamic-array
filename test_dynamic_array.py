@@ -71,7 +71,7 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_remove_invalid_item(self):
         """Test that ValueError is raised when element not found"""
-        self.assertRaises(ValueError, self.arr.remove(self._INITIAL_SIZE))
+        self.assertRaises(ValueError, self.arr.remove, self._INITIAL_SIZE)
 
     def test_pop_from_end(self):
         """Test that value popped from end is removed and returned"""
@@ -117,7 +117,7 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_index_invalid(self):
         """Test that ValueError is raised when item is not present in array"""
-        self.assertRaises(ValueError, self.arr.index(self._INITIAL_SIZE + 2))
+        self.assertRaises(ValueError, self.arr.index, self._INITIAL_SIZE + 2)
 
     def test_count(self):
         """Test correct number of occurrences is returned"""
