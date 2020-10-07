@@ -144,5 +144,22 @@ class DynamicArrayTestCase(unittest.TestCase):
         for i in range(len(self.arr)):
             self.assertIs(copied_list[i], self.arr[i])
 
+    def test_print(self):
+        """Test that array prints values similar to print(list)"""
+        self.assertEqual(str(self.arr), str([i for i in range(self._INITIAL_SIZE)]))
+
+    def test_comparison_operators(self):
+        """Test array support for comparison operators (==, !=, <, <=, >, >=)"""
+        self.assertEqual(self.arr, [i for i in range(5)])
+        self.assertNotEqual(self.arr, [i for i in range(1, 6)])  # Different values
+        self.assertNotEqual(self.arr, [i for i in range(0, 4)])  # Different lengths
+        self.assertLess(self.arr, [i for i in range(1, 6)])  # One higher
+        self.assertLessEqual(self.arr, [i for i in range(1, 6)])
+        self.assertLessEqual(self.arr, [i for i in range(5)])
+        self.assertGreater(self.arr, [i for i in range(-1, 4)])
+        self.assertGreaterEqual(self.arr, [i for i in range(-1, 4)])
+        self.assertGreaterEqual(self.arr, [i for i in range(5)])
+
+
 if __name__ == '__main__':
     unittest.main()
