@@ -20,14 +20,22 @@ class DynamicArray:
     def append(self, element):
         """Add a new element to the end of the array"""
         if self._length == self._capacity:  # Need to increase size
-            self._capacity *= 2
-            longer_arr = self._create_array(self._capacity)
-            for i in range(self._length):
-                longer_arr[i] = self._arr[i]
-            self._arr = longer_arr
+            self._resize_arr(self._capacity * 2)
 
         self._arr[self._length] = element
         self._length += 1
+
+    def extend(self, seq):
+        """Add all elements from seq to end of array"""
+        for element in seq:
+            self.append(element)
+
+    def _resize_arr(self, new_capacity):
+        longer_arr = self._create_array(new_capacity)
+        for i in range(self._length):
+            longer_arr[i] = self._arr[i]
+        self._arr = longer_arr
+        self._capacity = new_capacity
 
     @staticmethod
     def _create_array(capacity):
