@@ -57,11 +57,11 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_insert_out_of_bounds(self):
         """Test inserting with indices that are out of bounds"""
-        # [0, 1, 2, 3, 4] --> [-1, 0, 1, 2, 3, 4, 5, 6]
+        # [0, 1, 2, 3, 4] --> [-1, 0, 1, 2, 3, 5, 4, 6]
         self.arr.insert(-1, 5)
         self.arr.insert(100, 6)
         self.arr.insert(-10, -1)
-        self.assertEqual(self.arr, [-1, 0, 1, 2, 3, 4, 5, 6])
+        self.assertEqual(self.arr, [-1, 0, 1, 2, 3, 5, 4, 6])
 
     def test_remove_valid_item(self):
         """Test that element in array is removed"""
