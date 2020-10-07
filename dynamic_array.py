@@ -77,6 +77,11 @@ class DynamicArray:
         self._length -= 1
         return element
 
+    def clear(self):
+        """Remove all values from the array"""
+        self._length = 0  # "Erase" values by ignoring them
+        self._resize_arr(1)  # Shrink array to original size
+
     def _convert_negative_index(self, idx):
         """Convert negative index to its positive counterpart"""
         return max(0, self._length + idx)
