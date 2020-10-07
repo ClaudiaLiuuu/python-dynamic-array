@@ -2,11 +2,20 @@ import ctypes
 
 
 class DynamicArray:
-    def __init__(self):
-        self._length = 0
-        self._capacity = 1
-        self._arr = self._create_array(self._capacity)
-        self._growth_factor = 2
+    """An implementation of a dynamic array which supports the same methods as python's
+    included list class. The list class is certainly more robust, but this implementation
+    is done for practice.
+    """
+    def __init__(self, growth_factor=2):
+        """Initializes DynamicArray with 0 elements, capacity of 1, an empty compact
+        array of length 1 for storing pointers, and a growth factor of 2 such that the
+        capacity will double each time that the array becomes full and shrink in half
+        when less than 1/4 of the capacity is full.
+        """
+        self._length = 0  # Number of elements in array
+        self._capacity = 1  # Capacity of array before expanding
+        self._arr = self._create_array(self._capacity)  # Compact array of pointers
+        self._growth_factor = growth_factor  # Factor to grow array when capacity reached
 
     def __getitem__(self, idx):
         """Return the element at the specified index"""
@@ -22,18 +31,20 @@ class DynamicArray:
 
     def __eq__(self, seq):
         """Check if array is lexicographically equal to seq"""
+        # If seq is different length or not a list, then it is not equal
         if self._length != len(seq) or not isinstance(seq, list):
             return False
+        # seq is equal if every element at the same index has equivalent value
         return all(self._arr[i] == seq[i] for i in range(self._length))
 
     def __ne__(self, seq):
         """Check if array is not lexicographically equal to seq"""
-        return not self.__eq__(seq)
+        return not self.__eq__(seq)  # Reverse of equality check
 
     def append(self, element):
         """Add a new element to the end of the array"""
         if self._length == self._capacity:  # Need to increase size
-            self._grow_arr()
+            self._grow_arr()  # Increase capacity by growth factor
         self._arr[self._length] = element
         self._length += 1
 
@@ -167,6 +178,7 @@ class DynamicArray:
 
     @staticmethod
     def _create_array(capacity):
+        """Return a compact array for storing pointers"""
         return (ctypes.py_object * capacity)()
 
 
