@@ -64,6 +64,19 @@ class DynamicArray:
                 return
         raise ValueError(f'{element} not in list')  # Raise if element not found
 
+    def pop(self, idx=-1):
+        """Remove element from end of array and return"""
+        if idx < 0:  # For negative indexing, convert to positive counterpart
+            idx = self._convert_negative_index(idx)
+        if not 0 <= idx < self._length:  # Ignore indices outside of bounds
+            raise IndexError(f'pop index {idx} out of bounds')
+        element = self._arr[idx]  # Save element so it can be returned
+        # Move all elements after index i one forward to "delete" element
+        for i in range(idx, self._length - 1):
+            self._arr[i] = self._arr[i + 1]
+        self._length -= 1
+        return element
+
     def _convert_negative_index(self, idx):
         """Convert negative index to its positive counterpart"""
         return max(0, self._length + idx)
