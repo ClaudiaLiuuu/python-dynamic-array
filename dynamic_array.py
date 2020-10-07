@@ -82,6 +82,27 @@ class DynamicArray:
         self._length = 0  # "Erase" values by ignoring them
         self._resize_arr(1)  # Shrink array to original size
 
+    def index(self, element, start=0, end=None):
+        """Return index of first item matching element with support for slicing"""
+        if end is None:  # Only bound end if value has been provided
+            end = self._length
+        if end < 0:  # For negative indexing, convert to positive counterpart
+            end = self._convert_negative_index(end)
+        start = min(self._length, max(0, start))  # Place start in bounds if extreme
+        end = min(self._length, max(0, end))  # Place end in bounds if extreme
+        for i in range(start, end):  # Search for element within bounds
+            if self._arr[i] == element:
+                return i
+        raise ValueError(f'{element} not found in array')  # Raise if element not found
+
+    def count(self, element):
+        """Return number of occurrences of element in array"""
+        count = 0
+        for i in range(self._length):  # Increment count when equal value is found
+            if self._arr[i] == element:
+                count += 1
+        return count
+
     def _convert_negative_index(self, idx):
         """Convert negative index to its positive counterpart"""
         return max(0, self._length + idx)
@@ -111,13 +132,5 @@ class DynamicArray:
 
 if __name__ == '__main__':
     arr = DynamicArray()
-    #print(len(arr))
     for i in range(5):
         arr.append(i)
-    # [0, 1, 2, 3, 4] --> [-1, 0, 1, 2, 3, 4, 5, 6]
-    arr.insert(-1, 5)
-    arr.insert(100, 6)
-    arr.insert(-10, -1)
-    for value in arr:
-        print(value)
-    #print(len(arr))
