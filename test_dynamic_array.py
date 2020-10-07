@@ -141,8 +141,8 @@ class DynamicArrayTestCase(unittest.TestCase):
     def test_copy(self):
         """Test that a shallow copy of the list is returned"""
         copied_list = self.arr.copy()
-        self.assertEqual(copied_list, self.arr)
-
+        for i in range(len(self.arr)):
+            self.assertIs(copied_list[i], self.arr[i])
 
 if __name__ == '__main__':
     unittest.main()
