@@ -10,7 +10,9 @@ class DynamicArray:
 
     def __getitem__(self, idx):
         """Return the element at the specified index"""
-        if 0 <= idx < self._length:
+        if idx < 0:  # For negative indexing, convert to positive counterpart
+            idx = self._convert_negative_index(idx)
+        if 0 <= idx < self._length:  # Check if index is within bounds
             return self._arr[idx]
         raise IndexError("Index out of bounds")
 
