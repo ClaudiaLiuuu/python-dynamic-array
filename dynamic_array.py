@@ -107,6 +107,14 @@ class DynamicArray:
         """Sort elements in ascending order in place"""
         self._quick_sort(0, self._length - 1)
 
+    def reverse(self):
+        """Reverse all elements of the array in place"""
+        left = 0  # Start at beginning of array
+        right = self._length - 1  # Start at end of array
+        while left <= right:  # Swap values until pointers collide
+            self._arr[left], self._arr[right] = self._arr[right], self._arr[left]
+            left, right = left + 1, right - 1
+
     def _quick_sort(self, start, end):
         """Recursively sort elements using the quick sort algorithm end inclusive"""
         if start >= end:  # Length of 1 or less
