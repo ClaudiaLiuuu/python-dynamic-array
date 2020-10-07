@@ -53,6 +53,17 @@ class DynamicArray:
         self._arr[idx] = element  # Insert element at new blank space
         self._length += 1
 
+    def remove(self, element):
+        """Remove first instance of element from array"""
+        for i in range(self._length):  # Find index of element in array
+            if self._arr[i] == element:
+                # Move all elements after index j one forward to "delete" element
+                for j in range(i, self._length - 1):
+                    self._arr[j] = self._arr[j + 1]
+                self._length -= 1
+                return
+        raise ValueError(f'{element} not in list')  # Raise if element not found
+
     def _convert_negative_index(self, idx):
         """Convert negative index to its positive counterpart"""
         return max(0, self._length + idx)
