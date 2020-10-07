@@ -5,6 +5,12 @@ class DynamicArray:
     """An implementation of a dynamic array which supports the same methods as python's
     included list class. The list class is certainly more robust, but this implementation
     is done for practice.
+
+    This class supports adding objects of any type to the array, and there is no need to
+    declare an explicit length or type of object stored in the array. The runtimes should
+    be asymptotically the same as python's native list implementation, but the actual
+    runtimes will likely be slower than lists. Eventually, there will be support for
+    operators such as +, but for now only the public list methods have been implemented.
     """
     def __init__(self, growth_factor=2):
         """Initializes DynamicArray with 0 elements, capacity of 1, an empty compact
@@ -28,6 +34,10 @@ class DynamicArray:
     def __len__(self):
         """Return the number of elements in the array"""
         return self._length
+
+    def __str__(self):
+        """Return a string representation of the array"""
+        return f'[{"".join(str(val) + ", " for val in self)[:-2]}]'
 
     def __eq__(self, seq):
         """Check if array is lexicographically equal to seq"""
@@ -182,7 +192,18 @@ class DynamicArray:
         return (ctypes.py_object * capacity)()
 
 
+# todo implement comparison operators
+# todo complete README
+# todo test operators versus native list to test runtime
+# todo check additional special methods for other functionality
+# todo implement shrinking
+# todo determine order for methods if necessary
+
+
 if __name__ == '__main__':
     arr = DynamicArray()
     for i in range(5):
         arr.append(i)
+    arr.append('asdf')
+    arr.append([1, 2, 3, 4, 5])
+    print(arr)
