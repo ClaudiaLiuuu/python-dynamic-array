@@ -115,6 +115,13 @@ class DynamicArray:
             self._arr[left], self._arr[right] = self._arr[right], self._arr[left]
             left, right = left + 1, right - 1
 
+    def copy(self):
+        """Return a shallow copy of the array"""
+        copy_arr = DynamicArray()  # Create new array to store values
+        for i in range(self._length):  # Append all values from original
+            copy_arr.append(self._arr[i])
+        return copy_arr
+
     def _quick_sort(self, start, end):
         """Recursively sort elements using the quick sort algorithm end inclusive"""
         if start >= end:  # Length of 1 or less
