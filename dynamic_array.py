@@ -103,6 +103,29 @@ class DynamicArray:
                 count += 1
         return count
 
+    def sort(self):
+        """Sort elements in ascending order in place"""
+        self._quick_sort(0, self._length - 1)
+
+    def _quick_sort(self, start, end):
+        """Recursively sort elements using the quick sort algorithm end inclusive"""
+        if start >= end:  # Length of 1 or less
+            return
+        pivot = self._arr[end]  # Select pivot as last value in array
+        left = start
+        right = end - 1  # Begin one before the pivot
+        while left <= right:  # Continue until all values are ordered
+            while left <= right and self._arr[left] < pivot:  # Find first value greater than pivot
+                left += 1
+            while left <= right and pivot < self._arr[right]:  # Find first value less than pivot
+                right -= 1
+            if left <= right:  # If unordered, then swap two found values
+                self._arr[left], self._arr[right] = self._arr[right], self._arr[left]
+                left, right = left + 1, right - 1  # Increment for next iteration
+        self._arr[left], self._arr[end] = self._arr[end], self._arr[left]  # Move pivot to middle
+        self._quick_sort(start, left - 1)  # Sort left portion
+        self._quick_sort(left + 1, end)  # Sort right portion
+
     def _convert_negative_index(self, idx):
         """Convert negative index to its positive counterpart"""
         return max(0, self._length + idx)
