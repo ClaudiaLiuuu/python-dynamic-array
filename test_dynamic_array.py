@@ -14,11 +14,22 @@ class DynamicArrayTestCase(unittest.TestCase):
         for i in range(num_elements):
             arr.append(i)
         end_time = time()
-        return (end_time - start_time) / num_elements
+        # Return arr as well so it can be used for other tests
+        return arr, (end_time - start_time) / num_elements
+
+    @staticmethod
+    def time_array_deletions(arr):
+        """Returns average time in seconds of deleting all elements in arr"""
+        start_time = time()
+        length = len(arr)
+        for i in range(length):
+            arr.pop()
+        end_time = time()
+        return (end_time - start_time) / length
 
     def setUp(self):
         """Create a new DynamicArray instance"""
-        self.arr = DynamicArray()
+        self.arr = DynamicArray(2)
         for i in range(self._INITIAL_SIZE):
             self.arr.append(i)
 
@@ -31,15 +42,6 @@ class DynamicArrayTestCase(unittest.TestCase):
             arr.append(i)
             self.assertEqual(arr[i], i)
         self.assertEqual(len(arr), num_elements)
-
-    def test_append_performance(self):
-        """Test amortized runtime by comparing 1,000 appends with 1,000,000"""
-        avg_small = self.time_array_appends(10)
-        avg_medium = self.time_array_appends(1000)
-        avg_large = self.time_array_appends(1000000)
-        self.assertAlmostEqual(avg_small, avg_medium, delta=0.05)
-        self.assertAlmostEqual(avg_small, avg_large, delta=0.05)
-        self.assertAlmostEqual(avg_medium, avg_large, delta=0.05)
 
     def test_extend(self):
         """Test extending array maintains original values and adds new values"""
@@ -159,6 +161,31 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertGreater(self.arr, [i for i in range(-1, 4)])
         self.assertGreaterEqual(self.arr, [i for i in range(-1, 4)])
         self.assertGreaterEqual(self.arr, [i for i in range(5)])
+
+    def test_insert_and_delete_performance(self):
+        """Test amortized runtime by comparing 10, 1000, and 1000000 operations"""
+        # Test insertion runtime
+        small_arr, avg_small_ins = self.time_array_appends(10)
+        medium_arr, avg_medium_ins = self.time_array_appends(1000)
+        large_arr, avg_large_ins = self.time_array_appends(1000000)
+        self.assertAlmostEqual(avg_small_ins, avg_medium_ins, delta=0.05)
+        self.assertAlmostEqual(avg_small_ins, avg_large_ins, delta=0.05)
+        self.assertAlmostEqual(avg_medium_ins, avg_large_ins, delta=0.05)
+
+        # Test deletion runtime
+        avg_small_del = self.time_array_deletions(small_arr)
+        avg_medium_del = self.time_array_deletions(medium_arr)
+        avg_large_del = self.time_array_deletions(large_arr)
+        self.assertAlmostEqual(avg_small_del, avg_medium_del, delta=0.05)
+        self.assertAlmostEqual(avg_small_del, avg_large_del, delta=0.05)
+        self.assertAlmostEqual(avg_medium_del, avg_large_del, delta=0.05)
+
+
+
+# todo Modify tests to not rely on hard coded 5 but instead on self._INITIAL_SIZE
+# todo Add additional tests for operators like +
+# todo Move tests into separate folder
+# todo Use more values than just numbers in the tests
 
 
 if __name__ == '__main__':
