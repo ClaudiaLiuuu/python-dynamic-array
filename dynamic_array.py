@@ -26,12 +26,29 @@ class DynamicArray(MutableSequence):
         self._growth_factor = max(2, growth_factor)  # Factor to grow array when capacity reached
 
     def __getitem__(self, idx):
-        """Return the element at the specified index"""
-        if idx < 0:  # For negative indexing, convert to positive counterpart
-            idx = self._convert_negative_index(idx)
-        if 0 <= idx < self._length:  # Check if index is within bounds
-            return self._arr[idx]
-        raise IndexError("Index out of bounds")
+        """Return the element at the specified index or return sliced array"""
+        if isinstance(idx, slice):
+            # Insert extreme values if none are specified
+            start = 0 if idx.start is None else idx.start
+            stop = self._length if idx.stop is None else idx.stop
+            step = 1 if idx.step is None or idx.step == 0 else idx.step
+            if start < 0:  # For negative indexing, convert to positive counterpart
+                start = self._convert_negative_index(start)
+            if stop < 0:
+                stop = self._convert_negative_index(stop)
+            if step < 1:  # Need to flip the start and stop values
+                start, stop = stop - 1, start - 1
+            # Return a new array with the values specified by the slice
+            slice_arr = DynamicArray(self._growth_factor)
+            for i in range(start, stop, step):
+                slice_arr.append(self._arr[i])
+            return slice_arr
+        else:  # Integer index
+            if idx < 0:  # For negative indexing, convert to positive counterpart
+                idx = self._convert_negative_index(idx)
+            if 0 <= idx < self._length:  # Check if index is within bounds
+                return self._arr[idx]
+            raise IndexError("Index out of bounds")
 
     def __setitem__(self, idx, element):
         """Set array value at index to element from syntax arr[idx] = element"""
@@ -52,6 +69,10 @@ class DynamicArray(MutableSequence):
     def __str__(self):
         """Return a string representation of the array"""
         return f'[{"".join(str(val) + ", " for val in self)[:-2]}]'
+
+    def __repr__(self):
+        """Return a string representation of the array for testing"""
+        return self.__str__()
 
     def __eq__(self, seq):
         """Check if array is lexicographically equal to seq"""
@@ -271,3 +292,6 @@ class DynamicArray(MutableSequence):
 
 if __name__ == '__main__':
     arr = DynamicArray()
+    for i in range(5):
+        arr.append(i)
+    print(arr[:5:-3])
