@@ -165,8 +165,8 @@ class DynamicArrayTestCase(unittest.TestCase):
         """Test functionality of the in operator for the array"""
         self.arr.append('apple')
         self.arr.append(20)
-        self.assertIn(self.arr, 'apple')
-        self.assertIn(self.arr, 20)
+        self.assertIn('apple', self.arr)
+        self.assertIn(20, self.arr)
 
     def test_array_concatenation(self):
         """Test that array supports concatenation"""
