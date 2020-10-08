@@ -79,6 +79,18 @@ class DynamicArray(MutableSequence):
         """Check if array is lexicographically greater than or equal to seq"""
         return not self.__lt__(seq)
 
+    def __add__(self, right_arr):
+        """Concatenate array with the right operand"""
+        concat_arr = self.copy()
+        concat_arr.extend(right_arr)
+        return concat_arr
+
+    def __radd__(self, left_arr):
+        """Concatenate array to the left operand"""
+        concat_arr = left_arr.copy()
+        concat_arr.extend(self)
+        return concat_arr
+
     def append(self, element):
         """Add a new element to the end of the array"""
         if self._length == self._capacity:  # Need to increase size
