@@ -34,7 +34,12 @@ class DynamicArray(MutableSequence):
         raise IndexError("Index out of bounds")
 
     def __setitem__(self, idx, element):
-        pass
+        """Set array value at index to element from syntax arr[idx] = element"""
+        if idx < 0:  # For negative indexing, convert to positive counterpart
+            idx = self._convert_negative_index(idx)
+        if not 0 <= idx < self._length:  # Ignore indices outside of bounds
+            raise IndexError(f'index {idx} out of bounds')
+        self._arr[idx] = element
 
     def __delitem__(self, idx):
         """Delete the item at index from syntax del arr[idx]"""
