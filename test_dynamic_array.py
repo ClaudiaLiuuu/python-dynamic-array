@@ -5,31 +5,11 @@ from dynamic_array import DynamicArray
 
 class DynamicArrayTestCase(unittest.TestCase):
     _INITIAL_SIZE = 5
-
-    @staticmethod
-    def time_array_appends(num_elements):
-        """Returns average time in seconds of num_elements appends"""
-        arr = DynamicArray()
-        start_time = time()
-        for i in range(num_elements):
-            arr.append(i)
-        end_time = time()
-        # Return arr as well so it can be used for other tests
-        return arr, (end_time - start_time) / num_elements
-
-    @staticmethod
-    def time_array_deletions(arr):
-        """Returns average time in seconds of deleting all elements in arr"""
-        start_time = time()
-        length = len(arr)
-        for i in range(length):
-            arr.pop()
-        end_time = time()
-        return (end_time - start_time) / length
+    _GROWTH_FACTOR = 2
 
     def setUp(self):
         """Create a new DynamicArray instance"""
-        self.arr = DynamicArray(2)
+        self.arr = DynamicArray(self._GROWTH_FACTOR)
         for i in range(self._INITIAL_SIZE):
             self.arr.append(i)
 
@@ -162,6 +142,26 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertGreaterEqual(self.arr, [i for i in range(-1, 4)])
         self.assertGreaterEqual(self.arr, [i for i in range(5)])
 
+    def time_array_appends(self, num_elements):
+        """Returns average time in seconds of num_elements appends"""
+        arr = DynamicArray(self._GROWTH_FACTOR)
+        start_time = time()
+        for i in range(num_elements):
+            arr.append(i)
+        end_time = time()
+        # Return arr as well so it can be used for other tests
+        return arr, (end_time - start_time) / num_elements
+
+    @staticmethod
+    def time_array_deletions(arr):
+        """Returns average time in seconds of deleting all elements in arr"""
+        start_time = time()
+        length = len(arr)
+        for i in range(length):
+            arr.pop()
+        end_time = time()
+        return (end_time - start_time) / length
+
     def test_insert_and_delete_performance(self):
         """Test amortized runtime by comparing 10, 1000, and 1000000 operations"""
         # Test insertion runtime
@@ -179,6 +179,15 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertAlmostEqual(avg_small_del, avg_medium_del, delta=0.05)
         self.assertAlmostEqual(avg_small_del, avg_large_del, delta=0.05)
         self.assertAlmostEqual(avg_medium_del, avg_large_del, delta=0.05)
+
+        # Test that the size of the array actually changes
+        # It seems to be bad practice to rely on protected data for testing, but
+        # it needs to be specifically tested whether or not the true size of the
+        # underlying array is actually shrinking when these deletion operations
+        # are executed.
+        self.assertEqual(len(small_arr._arr), self._GROWTH_FACTOR)
+        self.assertEqual(len(medium_arr._arr), self._GROWTH_FACTOR)
+        self.assertEqual(len(large_arr._arr), self._GROWTH_FACTOR)
 
 
 
