@@ -154,6 +154,56 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertGreaterEqual(self.arr, [i for i in range(-1, 4)])
         self.assertGreaterEqual(self.arr, [i for i in range(5)])
 
+    def test_item_assignment(self):
+        """Test that array supports item assignment such as arr[1] = 2"""
+        self.arr[0] = 'apple'
+        self.arr[3] = -5
+        self.assertEqual(self.arr[0], 'apple')
+        self.assertEqual(self.arr[3], -5)
+
+    def test_array_in_operator(self):
+        """Test functionality of the in operator for the array"""
+        self.arr.append('apple')
+        self.arr.append(20)
+        self.assertIn(self.arr, 'apple')
+        self.assertIn(self.arr, 20)
+
+    def test_array_concatenation(self):
+        """Test that array supports concatenation"""
+        arr = DynamicArray(self._GROWTH_FACTOR)
+        for i in range(self._INITIAL_SIZE, self._INITIAL_SIZE + 20):
+            arr.append(i)
+        concat_arr = self.arr + arr
+        self.assertEqual(concat_arr, [i for i in range(self._INITIAL_SIZE + 20)])
+
+    def test_array_multiplication(self):
+        """Test that array supports multiplication"""
+        self.arr *= 5
+        self.assertEqual(self.arr, [i for i in range(self._INITIAL_SIZE)] * 5)
+
+    def test_array_deletion(self):
+        """Test that array deletes item with syntax del arr[idx]"""
+        del self.arr[self._INITIAL_SIZE - 1]
+        del self.arr[0]
+        del self.arr[0]
+        self.assertEqual(self.arr, [i for i in range(2, self._INITIAL_SIZE - 1)])
+
+    def test_array_slicing(self):
+        """Test slicing notation support for the array"""
+        py_list = [i for i in range(self._INITIAL_SIZE)]
+        self.assertEqual(self.arr[0:2], py_list[0:2])
+        self.assertEqual(self.arr[:2], py_list[:2])
+        self.assertEqual(self.arr[2:], py_list[2:])
+        self.assertEqual(self.arr[:], py_list[:])
+        self.assertEqual(self.arr[-3:-1], py_list[-3:-1])
+        self.assertEqual(self.arr[::-1], py_list[::-1])
+        self.assertEqual(self.arr[:self._INITIAL_SIZE:-3], py_list[:self._INITIAL_SIZE:-3])
+
+    def test_array_default_bool(self):
+        """Test if array's default boolean value is False if no items or True otherwise"""
+        self.assertTrue(self.arr)
+        self.assertFalse(DynamicArray())
+
     def time_array_appends(self, num_elements):
         """Returns average time in seconds of num_elements appends"""
         arr = DynamicArray(self._GROWTH_FACTOR)
@@ -201,9 +251,7 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertEqual(len(medium_arr._arr), self._GROWTH_FACTOR)
         self.assertEqual(len(large_arr._arr), self._GROWTH_FACTOR)
 
-# todo Add additional tests for operators like +
 # todo Move tests into separate folder
-# todo Use more values than just numbers in the tests
 
 
 if __name__ == '__main__':
