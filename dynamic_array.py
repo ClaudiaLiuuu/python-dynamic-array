@@ -51,6 +51,26 @@ class DynamicArray:
         """Check if array is not lexicographically equal to seq"""
         return not self.__eq__(seq)  # Reverse of equality check
 
+    def __lt__(self, seq):
+        """Check if array is lexicographically less than seq"""
+        if any(self._arr[i] < seq[i] for i in range(min(self._length, len(seq)))):
+            return True
+        return self._length < len(seq)
+
+    def __le__(self, seq):
+        """Check if array is lexicographically less than or equal to seq"""
+        if any(self._arr[i] > seq[i] for i in range(min(self._length, len(seq)))):
+            return False
+        return self._length <= len(seq)
+
+    def __gt__(self, seq):
+        """Check if array is lexicographically greater than seq"""
+        return not self.__le__(seq)
+
+    def __ge__(self, seq):
+        """Check if array is lexicographically greater than or equal to seq"""
+        return not self.__lt__(seq)
+
     def append(self, element):
         """Add a new element to the end of the array"""
         if self._length == self._capacity:  # Need to increase size
@@ -212,10 +232,7 @@ class DynamicArray:
 
 if __name__ == '__main__':
     arr = DynamicArray()
-    for i in range(100):
+    for i in range(5):
         arr.append(i)
-    for i in range(100):
-        arr.pop()
-    arr.append('asdf')
-    arr.append([1, 2, 3, 4, 5])
     print(arr)
+    print(arr <= [1, 2, 3, 4, 5])
