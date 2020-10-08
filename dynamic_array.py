@@ -21,7 +21,7 @@ class DynamicArray:
         self._length = 0  # Number of elements in array
         self._capacity = 1  # Capacity of array before expanding
         self._arr = self._create_array(self._capacity)  # Compact array of pointers
-        self._growth_factor = growth_factor  # Factor to grow array when capacity reached
+        self._growth_factor = max(2, growth_factor)  # Factor to grow array when capacity reached
 
     def __getitem__(self, idx):
         """Return the element at the specified index"""
