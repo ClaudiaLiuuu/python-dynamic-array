@@ -4,7 +4,12 @@ from dynamic_array import DynamicArray
 
 
 class DynamicArrayTestCase(unittest.TestCase):
-    _INITIAL_SIZE = 5
+    """Tests for all public methods and operations of the DynamicArray class using
+    _INITIAL_SIZE as the size of the test array which is filled with the values
+    range(self._INITIAL_SIZE) and _GROWTH_FACTOR as the multiplier for shrinking
+    and expanding the dynamic array.
+    """
+    _INITIAL_SIZE = 5  # Do not set below 5
     _GROWTH_FACTOR = 2
 
     def setUp(self):
@@ -15,7 +20,7 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_append(self):
         """Test correct placement in array when appending 1,000 numbers"""
-        arr = DynamicArray()
+        arr = DynamicArray(self._GROWTH_FACTOR)
         num_elements = 1000
         self.assertEqual(len(arr), 0)
         for i in range(num_elements):
@@ -25,25 +30,32 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_extend(self):
         """Test extending array maintains original values and adds new values"""
-        self.arr.extend([i for i in range(5, 20)])
-        for i in range(20):
+        self.arr.extend([i for i in range(self._INITIAL_SIZE, self._INITIAL_SIZE + 20)])
+        for i in range(self._INITIAL_SIZE + 20):
             self.assertEqual(self.arr[i], i)
 
     def test_insert(self):
         """Test array insertion correctly inserts value at desired index"""
         # [0, 1, 2, 3, 4] --> [40, 0, 1, 50, 2, 3, 4, 60]
-        self.arr.insert(0, 40)
-        self.arr.insert(3, 50)
-        self.arr.insert(len(self.arr), 60)
-        self.assertEqual(self.arr, [40, 0, 1, 50, 2, 3, 4, 60])
+        arr = DynamicArray(self._GROWTH_FACTOR)
+        for i in range(5):
+            arr.append(i)
+        arr.insert(0, 'apple')
+        arr.insert(3, (5, -1))
+        arr.insert(len(arr), self.arr)
+        self.assertEqual(arr, ['apple', 0, 1, (5, -1), 2, 3, 4,
+                               [i for i in range(self._INITIAL_SIZE)]])
 
     def test_insert_out_of_bounds(self):
         """Test inserting with indices that are out of bounds"""
         # [0, 1, 2, 3, 4] --> [-1, 0, 1, 2, 3, 5, 4, 6]
-        self.arr.insert(-1, 5)
-        self.arr.insert(100, 6)
-        self.arr.insert(-10, -1)
-        self.assertEqual(self.arr, [-1, 0, 1, 2, 3, 5, 4, 6])
+        arr = DynamicArray(self._GROWTH_FACTOR)
+        for i in range(5):
+            arr.append(i)
+        arr.insert(-1, 5)
+        arr.insert(100, 6)
+        arr.insert(-10, -1)
+        self.assertEqual(arr, [-1, 0, 1, 2, 3, 5, 4, 6])
 
     def test_remove_valid_item(self):
         """Test that element in array is removed"""
@@ -189,9 +201,6 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertEqual(len(medium_arr._arr), self._GROWTH_FACTOR)
         self.assertEqual(len(large_arr._arr), self._GROWTH_FACTOR)
 
-
-
-# todo Modify tests to not rely on hard coded 5 but instead on self._INITIAL_SIZE
 # todo Add additional tests for operators like +
 # todo Move tests into separate folder
 # todo Use more values than just numbers in the tests
