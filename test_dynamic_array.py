@@ -200,7 +200,7 @@ class DynamicArrayTestCase(unittest.TestCase):
         self.assertEqual(py_list[:], self.arr[:])
         self.assertEqual(py_list[-3:-1], self.arr[-3:-1])
         self.assertEqual(py_list[::-1], self.arr[::-1])
-        self.assertEqual(py_list[:self._INITIAL_SIZE:-3], self.arr[:self._INITIAL_SIZE:-3])
+        self.assertEqual(py_list[::-3], self.arr[::-3])
 
     def test_array_default_bool(self):
         """Test if array's default boolean value is False if no items or True otherwise"""
