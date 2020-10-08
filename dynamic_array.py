@@ -1,7 +1,8 @@
 import ctypes
+from collections.abc import MutableSequence
 
 
-class DynamicArray:
+class DynamicArray(MutableSequence):
     """An implementation of a dynamic array which supports the same methods as python's
     included list class. The list class is certainly more robust, but this implementation
     is done for practice.
@@ -12,6 +13,7 @@ class DynamicArray:
     runtimes will likely be slower than lists. Eventually, there will be support for
     operators such as +, but for now only the public list methods have been implemented.
     """
+
     def __init__(self, growth_factor=2):
         """Initializes DynamicArray with 0 elements, capacity of 1, an empty compact
         array of length 1 for storing pointers, and a growth factor of 2 such that the
@@ -30,6 +32,12 @@ class DynamicArray:
         if 0 <= idx < self._length:  # Check if index is within bounds
             return self._arr[idx]
         raise IndexError("Index out of bounds")
+
+    def __setitem__(self, idx, element):
+        pass
+
+    def __delitem__(self, idx):
+        pass
 
     def __len__(self):
         """Return the number of elements in the array"""
@@ -222,11 +230,9 @@ class DynamicArray:
         return (ctypes.py_object * capacity)()
 
 
-# todo implement comparison operators
 # todo complete README
 # todo test operators versus native list to test runtime
 # todo check additional special methods for other functionality
-# todo implement shrinking
 # todo determine order for methods if necessary
 
 
