@@ -97,6 +97,22 @@ class DynamicArray(MutableSequence):
         concat_arr.extend(self)
         return concat_arr
 
+    def __mul__(self, num):
+        """Repeat values in arr num times if num is the right operand"""
+        if num <= 0:  # Return an empty array
+            return DynamicArray(self._growth_factor)
+        # Append values to a new array num - 1 times
+        mult_arr = self.copy()
+        length = len(mult_arr)
+        for _ in range(num - 1):
+            for i in range(length):
+                mult_arr.append(mult_arr[i])
+        return mult_arr
+
+    def __rmul__(self, num):
+        """Repeat values in arr num times if num is the left operand"""
+        return self.__mul__(num)
+
     def append(self, element):
         """Add a new element to the end of the array"""
         if self._length == self._capacity:  # Need to increase size
@@ -188,7 +204,7 @@ class DynamicArray(MutableSequence):
 
     def copy(self):
         """Return a shallow copy of the array"""
-        copy_arr = DynamicArray()  # Create new array to store values
+        copy_arr = DynamicArray(self._growth_factor)  # Create new array to store values
         for i in range(self._length):  # Append all values from original
             copy_arr.append(self._arr[i])
         return copy_arr
@@ -250,13 +266,8 @@ class DynamicArray(MutableSequence):
 
 # todo complete README
 # todo test operators versus native list to test runtime
-# todo check additional special methods for other functionality
 # todo determine order for methods if necessary
 
 
 if __name__ == '__main__':
     arr = DynamicArray()
-    for i in range(5):
-        arr.append(i)
-    print(arr)
-    print(arr <= [1, 2, 3, 4, 5])
