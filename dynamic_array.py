@@ -37,7 +37,8 @@ class DynamicArray(MutableSequence):
         pass
 
     def __delitem__(self, idx):
-        pass
+        """Delete the item at index from syntax del arr[idx]"""
+        self.pop(idx)
 
     def __len__(self):
         """Return the number of elements in the array"""
@@ -133,7 +134,7 @@ class DynamicArray(MutableSequence):
         if idx < 0:  # For negative indexing, convert to positive counterpart
             idx = self._convert_negative_index(idx)
         if not 0 <= idx < self._length:  # Ignore indices outside of bounds
-            raise IndexError(f'pop index {idx} out of bounds')
+            raise IndexError(f'index {idx} out of bounds')
         element = self._arr[idx]  # Save element so it can be returned
         # Move all elements after index i one forward to "delete" element
         for i in range(idx, self._length - 1):
