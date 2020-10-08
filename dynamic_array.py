@@ -84,6 +84,7 @@ class DynamicArray:
                 for j in range(i, self._length - 1):
                     self._arr[j] = self._arr[j + 1]
                 self._length -= 1
+                self._check_shrink()  # Shrink array if length is too small
                 return
         raise ValueError(f'{element} not in list')  # Raise if element not found
 
@@ -98,6 +99,7 @@ class DynamicArray:
         for i in range(idx, self._length - 1):
             self._arr[i] = self._arr[i + 1]
         self._length -= 1
+        self._check_shrink()  # Shrink array if length is too small
         return element
 
     def clear(self):
@@ -168,6 +170,14 @@ class DynamicArray:
         """Convert negative index to its positive counterpart"""
         return max(0, self._length + idx)
 
+    def _check_shrink(self):
+        """Checks if array should shrink and executes _shrink_arr if True"""
+        # As an example, if length is 1/4 of capacity and growth factor is 2,
+        # then the capacity should shrink in half to keep length proportional
+        # to capacity
+        if self._length < int(self._capacity / (self._growth_factor ** 2)):
+            self._shrink_arr()
+
     def _shrink_arr(self):
         """Increase the capacity of the array by current capacity * growth factor"""
         self._resize_arr(self._capacity // self._growth_factor)
@@ -202,8 +212,10 @@ class DynamicArray:
 
 if __name__ == '__main__':
     arr = DynamicArray()
-    for i in range(5):
+    for i in range(100):
         arr.append(i)
+    for i in range(100):
+        arr.pop()
     arr.append('asdf')
     arr.append([1, 2, 3, 4, 5])
     print(arr)
