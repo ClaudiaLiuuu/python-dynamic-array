@@ -22,17 +22,17 @@ class DynamicArrayTestCase(unittest.TestCase):
         """Test correct placement in array when appending 1,000 numbers"""
         arr = DynamicArray(self._GROWTH_FACTOR)
         num_elements = 1000
-        self.assertEqual(len(arr), 0)
+        self.assertEqual(0, len(arr))
         for i in range(num_elements):
             arr.append(i)
             self.assertEqual(arr[i], i)
-        self.assertEqual(len(arr), num_elements)
+        self.assertEqual(num_elements, len(arr))
 
     def test_extend(self):
         """Test extending array maintains original values and adds new values"""
         self.arr.extend([i for i in range(self._INITIAL_SIZE, self._INITIAL_SIZE + 20)])
         for i in range(self._INITIAL_SIZE + 20):
-            self.assertEqual(self.arr[i], i)
+            self.assertEqual(i, self.arr[i])
 
     def test_insert(self):
         """Test array insertion correctly inserts value at desired index"""
@@ -43,8 +43,8 @@ class DynamicArrayTestCase(unittest.TestCase):
         arr.insert(0, 'apple')
         arr.insert(3, (5, -1))
         arr.insert(len(arr), self.arr)
-        self.assertEqual(arr, ['apple', 0, 1, (5, -1), 2, 3, 4,
-                               [i for i in range(self._INITIAL_SIZE)]])
+        self.assertEqual(['apple', 0, 1, (5, -1), 2, 3, 4,
+                          [i for i in range(self._INITIAL_SIZE)]], arr)
 
     def test_insert_out_of_bounds(self):
         """Test inserting with indices that are out of bounds"""
@@ -55,13 +55,13 @@ class DynamicArrayTestCase(unittest.TestCase):
         arr.insert(-1, 5)
         arr.insert(100, 6)
         arr.insert(-10, -1)
-        self.assertEqual(arr, [-1, 0, 1, 2, 3, 5, 4, 6])
+        self.assertEqual([-1, 0, 1, 2, 3, 5, 4, 6], arr)
 
     def test_remove_valid_item(self):
         """Test that element in array is removed"""
         self.arr.remove(2)
         self.assertNotIn(2, self.arr)
-        self.assertEqual(self.arr[2], 3)
+        self.assertEqual(3, self.arr[2])
 
     def test_remove_invalid_item(self):
         """Test that ValueError is raised when element not found"""
@@ -69,27 +69,27 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_pop_from_end(self):
         """Test that value popped from end is removed and returned"""
-        self.assertEqual(self.arr.pop(), self._INITIAL_SIZE - 1)
+        self.assertEqual(self._INITIAL_SIZE - 1, self.arr.pop())
         self.assertNotIn(self._INITIAL_SIZE - 1, self.arr)
-        self.assertEqual(len(self.arr), self._INITIAL_SIZE - 1)
+        self.assertEqual(self._INITIAL_SIZE - 1, len(self.arr))
 
     def test_pop_from_middle(self):
         """Test that value popped from middle is removed and returned"""
-        self.assertEqual(self.arr.pop(2), 2)
+        self.assertEqual(2, self.arr.pop(2))
         self.assertNotIn(2, self.arr)
-        self.assertEqual(len(self.arr), self._INITIAL_SIZE - 1)
+        self.assertEqual(self._INITIAL_SIZE - 1, len(self.arr))
 
     def test_pop_from_beginning(self):
         """Test that value popped from beginning is removed and returned"""
-        self.assertEqual(self.arr.pop(0), 0)
+        self.assertEqual(0, self.arr.pop(0))
         self.assertNotIn(0, self.arr)
-        self.assertEqual(len(self.arr), self._INITIAL_SIZE - 1)
+        self.assertEqual(self._INITIAL_SIZE - 1, len(self.arr))
 
     def test_clear(self):
         """Test that all values are removed from the array"""
         self.arr.clear()
-        self.assertEqual(len(self.arr), 0)
-        self.assertEqual(self.arr, [])
+        self.assertEqual(0, len(self.arr))
+        self.assertEqual([], self.arr)
 
     def test_index_single(self):
         """Test that index of item is returned when item is in array"""
@@ -99,7 +99,7 @@ class DynamicArrayTestCase(unittest.TestCase):
         # that is why a new value without this property is appended and tested against.
         unique_value = self._INITIAL_SIZE + 2
         self.arr.append(unique_value)
-        self.assertEqual(self.arr.index(unique_value), self._INITIAL_SIZE)
+        self.assertEqual(self._INITIAL_SIZE, self.arr.index(unique_value))
 
     def test_index_slice(self):
         """Test that index of item is returned from slice of array"""
@@ -107,7 +107,7 @@ class DynamicArrayTestCase(unittest.TestCase):
         unique_value = self._INITIAL_SIZE + 2
         self.arr.append(unique_value)
         s = self._INITIAL_SIZE  # Alias for less verbose statement
-        self.assertEqual(self.arr.index(unique_value, s - (s // 2)), s)
+        self.assertEqual(s, self.arr.index(unique_value, s - (s // 2)))
 
     def test_index_invalid(self):
         """Test that ValueError is raised when item is not present in array"""
@@ -116,9 +116,9 @@ class DynamicArrayTestCase(unittest.TestCase):
     def test_count(self):
         """Test correct number of occurrences is returned"""
         self.arr.append(self._INITIAL_SIZE - 1)
-        self.assertEqual(self.arr.count(self._INITIAL_SIZE - 1), 2)
-        self.assertEqual(self.arr.count(0), 1)
-        self.assertEqual(self.arr.count(self._INITIAL_SIZE), 0)
+        self.assertEqual(2, self.arr.count(self._INITIAL_SIZE - 1))
+        self.assertEqual(1, self.arr.count(0))
+        self.assertEqual(0, self.arr.count(self._INITIAL_SIZE))
 
     def test_sort(self):
         """Test that elements are correctly sorted in ascending order"""
@@ -140,26 +140,29 @@ class DynamicArrayTestCase(unittest.TestCase):
 
     def test_print(self):
         """Test that array prints values similar to print(list)"""
-        self.assertEqual(str(self.arr), str([i for i in range(self._INITIAL_SIZE)]))
+        self.assertEqual(str([i for i in range(self._INITIAL_SIZE)]), str(self.arr),)
 
     def test_comparison_operators(self):
         """Test array support for comparison operators (==, !=, <, <=, >, >=)"""
-        self.assertEqual(self.arr, [i for i in range(5)])
-        self.assertNotEqual(self.arr, [i for i in range(1, 6)])  # Different values
-        self.assertNotEqual(self.arr, [i for i in range(0, 4)])  # Different lengths
-        self.assertLess(self.arr, [i for i in range(1, 6)])  # One higher
-        self.assertLessEqual(self.arr, [i for i in range(1, 6)])
-        self.assertLessEqual(self.arr, [i for i in range(5)])
-        self.assertGreater(self.arr, [i for i in range(-1, 4)])
-        self.assertGreaterEqual(self.arr, [i for i in range(-1, 4)])
-        self.assertGreaterEqual(self.arr, [i for i in range(5)])
+        arr = DynamicArray(self._GROWTH_FACTOR)
+        for i in range(5):
+            arr.append(i)
+        self.assertEqual([i for i in range(5)], arr)
+        self.assertNotEqual([i for i in range(1, 6)], arr)  # Different values
+        self.assertNotEqual([i for i in range(0, 4)], arr)  # Different lengths
+        self.assertLess([i for i in range(-1, 4)], arr)  # One higher
+        self.assertLessEqual([i for i in range(-1, 4)], arr)
+        self.assertLessEqual([i for i in range(5)], arr)
+        self.assertGreater([i for i in range(1, 6)], arr)
+        self.assertGreaterEqual([i for i in range(1, 6)], arr)
+        self.assertGreaterEqual([i for i in range(5)], arr)
 
     def test_item_assignment(self):
         """Test that array supports item assignment such as arr[1] = 2"""
         self.arr[0] = 'apple'
         self.arr[3] = -5
-        self.assertEqual(self.arr[0], 'apple')
-        self.assertEqual(self.arr[3], -5)
+        self.assertEqual('apple', self.arr[0])
+        self.assertEqual(-5, self.arr[3])
 
     def test_array_in_operator(self):
         """Test functionality of the in operator for the array"""
@@ -174,30 +177,30 @@ class DynamicArrayTestCase(unittest.TestCase):
         for i in range(self._INITIAL_SIZE, self._INITIAL_SIZE + 20):
             arr.append(i)
         concat_arr = self.arr + arr
-        self.assertEqual(concat_arr, [i for i in range(self._INITIAL_SIZE + 20)])
+        self.assertEqual([i for i in range(self._INITIAL_SIZE + 20)], concat_arr)
 
     def test_array_multiplication(self):
         """Test that array supports multiplication"""
         self.arr *= 5
-        self.assertEqual(self.arr, [i for i in range(self._INITIAL_SIZE)] * 5)
+        self.assertEqual([i for i in range(self._INITIAL_SIZE)] * 5, self.arr)
 
     def test_array_deletion(self):
         """Test that array deletes item with syntax del arr[idx]"""
         del self.arr[self._INITIAL_SIZE - 1]
         del self.arr[0]
         del self.arr[0]
-        self.assertEqual(self.arr, [i for i in range(2, self._INITIAL_SIZE - 1)])
+        self.assertEqual([i for i in range(2, self._INITIAL_SIZE - 1)], self.arr)
 
     def test_array_slicing(self):
         """Test slicing notation support for the array"""
         py_list = [i for i in range(self._INITIAL_SIZE)]
-        self.assertEqual(self.arr[0:2], py_list[0:2])
-        self.assertEqual(self.arr[:2], py_list[:2])
-        self.assertEqual(self.arr[2:], py_list[2:])
-        self.assertEqual(self.arr[:], py_list[:])
-        self.assertEqual(self.arr[-3:-1], py_list[-3:-1])
-        self.assertEqual(self.arr[::-1], py_list[::-1])
-        self.assertEqual(self.arr[:self._INITIAL_SIZE:-3], py_list[:self._INITIAL_SIZE:-3])
+        self.assertEqual(py_list[0:2], self.arr[0:2])
+        self.assertEqual(py_list[:2], self.arr[:2])
+        self.assertEqual(py_list[2:], self.arr[2:])
+        self.assertEqual(py_list[:], self.arr[:])
+        self.assertEqual(py_list[-3:-1], self.arr[-3:-1])
+        self.assertEqual(py_list[::-1], self.arr[::-1])
+        self.assertEqual(py_list[:self._INITIAL_SIZE:-3], self.arr[:self._INITIAL_SIZE:-3])
 
     def test_array_default_bool(self):
         """Test if array's default boolean value is False if no items or True otherwise"""
@@ -247,9 +250,10 @@ class DynamicArrayTestCase(unittest.TestCase):
         # it needs to be specifically tested whether or not the true size of the
         # underlying array is actually shrinking when these deletion operations
         # are executed.
-        self.assertEqual(len(small_arr._arr), self._GROWTH_FACTOR)
-        self.assertEqual(len(medium_arr._arr), self._GROWTH_FACTOR)
-        self.assertEqual(len(large_arr._arr), self._GROWTH_FACTOR)
+        self.assertEqual(self._GROWTH_FACTOR, len(small_arr._arr))
+        self.assertEqual(self._GROWTH_FACTOR, len(medium_arr._arr))
+        self.assertEqual(self._GROWTH_FACTOR, len(large_arr._arr))
+
 
 # todo Move tests into separate folder
 
