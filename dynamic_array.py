@@ -7,11 +7,13 @@ class DynamicArray(MutableSequence):
     included list class. The list class is certainly more robust, but this implementation
     is done for practice.
 
+    The underlying data structure is a compact array, and this array by default doubles
+    in size once the capacity is full. For operations that remove elements from the dynamic
+    array, the underlying compact array will by default be shrunk in half once capacity
+    is only a quarter full to keep length proportional to the number of stored elements.
+
     This class supports adding objects of any type to the array, and there is no need to
-    declare an explicit length or type of object stored in the array. The runtimes should
-    be asymptotically the same as python's native list implementation, but the actual
-    runtimes will likely be slower than lists. Eventually, there will be support for
-    operators such as +, but for now only the public list methods have been implemented.
+    declare an explicit length or type of object stored in the array.
     """
 
     def __init__(self, growth_factor=2):
@@ -32,17 +34,21 @@ class DynamicArray(MutableSequence):
             start = 0 if idx.start is None else idx.start
             stop = self._length if idx.stop is None else idx.stop
             step = 1 if idx.step is None or idx.step == 0 else idx.step
-            if start < 0:  # For negative indexing, convert to positive counterpart
+
+            # Convert any negative values to positive counterparts
+            if start < 0:
                 start = self._convert_negative_index(start)
             if stop < 0:
                 stop = self._convert_negative_index(stop)
             if step < 1:  # Need to flip the start and stop values
                 start, stop = stop - 1, start - 1
+
             # Return a new array with the values specified by the slice
             slice_arr = DynamicArray(self._growth_factor)
             for i in range(start, stop, step):
                 slice_arr.append(self._arr[i])
             return slice_arr
+
         else:  # Integer index
             if idx < 0:  # For negative indexing, convert to positive counterpart
                 idx = self._convert_negative_index(idx)
@@ -108,13 +114,13 @@ class DynamicArray(MutableSequence):
 
     def __add__(self, right_arr):
         """Concatenate array with the right operand"""
-        concat_arr = self.copy()
+        concat_arr = self.copy()  # Create new instance to return
         concat_arr.extend(right_arr)
         return concat_arr
 
     def __radd__(self, left_arr):
         """Concatenate array to the left operand"""
-        concat_arr = left_arr.copy()
+        concat_arr = left_arr.copy()  # Create new instance to return
         concat_arr.extend(self)
         return concat_arr
 
@@ -122,9 +128,12 @@ class DynamicArray(MutableSequence):
         """Repeat values in arr num times if num is the right operand"""
         if num <= 0:  # Return an empty array
             return DynamicArray(self._growth_factor)
-        # Append values to a new array num - 1 times
+
+        # Create new array for adding elements to
         mult_arr = self.copy()
         length = len(mult_arr)
+
+        # Append values to a new array num - 1 times
         for _ in range(num - 1):
             for i in range(length):
                 mult_arr.append(mult_arr[i])
@@ -150,9 +159,11 @@ class DynamicArray(MutableSequence):
         """Insert element in array at index"""
         if self._length == self._capacity:  # Need to increase size
             self._grow_arr()
+
         if idx < 0:  # For negative indexing, convert to positive counterpart
             idx = self._convert_negative_index(idx)
         idx = min(self._length, idx)  # Any index over the length is converted
+
         # Move values after idx one right to make room for new element
         for i in range(self._length, idx, -1):
             self._arr[i] = self._arr[i - 1]
@@ -177,6 +188,7 @@ class DynamicArray(MutableSequence):
             idx = self._convert_negative_index(idx)
         if not 0 <= idx < self._length:  # Ignore indices outside of bounds
             raise IndexError(f'index {idx} out of bounds')
+
         element = self._arr[idx]  # Save element so it can be returned
         # Move all elements after index i one forward to "delete" element
         for i in range(idx, self._length - 1):
@@ -196,6 +208,7 @@ class DynamicArray(MutableSequence):
             end = self._length
         if end < 0:  # For negative indexing, convert to positive counterpart
             end = self._convert_negative_index(end)
+
         start = min(self._length, max(0, start))  # Place start in bounds if extreme
         end = min(self._length, max(0, end))  # Place end in bounds if extreme
         for i in range(start, end):  # Search for element within bounds
@@ -234,17 +247,21 @@ class DynamicArray(MutableSequence):
         """Recursively sort elements using the quick sort algorithm end inclusive"""
         if start >= end:  # Length of 1 or less
             return
+
         pivot = self._arr[end]  # Select pivot as last value in array
         left = start
         right = end - 1  # Begin one before the pivot
+
         while left <= right:  # Continue until all values are ordered
             while left <= right and self._arr[left] < pivot:  # Find first value greater than pivot
                 left += 1
             while left <= right and pivot < self._arr[right]:  # Find first value less than pivot
                 right -= 1
+
             if left <= right:  # If unordered, then swap two found values
                 self._arr[left], self._arr[right] = self._arr[right], self._arr[left]
                 left, right = left + 1, right - 1  # Increment for next iteration
+
         self._arr[left], self._arr[end] = self._arr[end], self._arr[left]  # Move pivot to middle
         self._quick_sort(start, left - 1)  # Sort left portion
         self._quick_sort(left + 1, end)  # Sort right portion
@@ -273,9 +290,13 @@ class DynamicArray(MutableSequence):
         """Resize the array to the specified capacity"""
         if new_capacity < self._length:
             raise RuntimeError('New capacity is lower than length')
+
+        # Copy values to array with new capacity
         longer_arr = self._create_array(new_capacity)
         for i in range(self._length):
             longer_arr[i] = self._arr[i]
+
+        # Set the arr to the new array
         self._arr = longer_arr
         self._capacity = new_capacity
 
@@ -285,13 +306,6 @@ class DynamicArray(MutableSequence):
         return (ctypes.py_object * capacity)()
 
 
-# todo complete README
-# todo test operators versus native list to test runtime
-# todo determine order for methods if necessary
-
-
+# Support for anything that needs to be done when module is invoked directly
 if __name__ == '__main__':
-    arr = DynamicArray()
-    for i in range(5):
-        arr.append(i)
-    print(arr[:5:-3])
+    pass
