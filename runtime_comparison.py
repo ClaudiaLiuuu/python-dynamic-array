@@ -22,17 +22,31 @@ def test_method_runtime(method, size, value=None):
     return time_method(method_dyn), time_method(method_list)
 
 
-def format_method(method_name, value=None):
-    dyn_sml, nat_sml = test_method_runtime(method_name, 100, value)
-    dyn_med, nat_med = test_method_runtime(method_name, 10000, value)
-    dyn_lrg, nat_lrg = test_method_runtime(method_name, 1000000, value)
+def compare_public_methods(method_name):
+    methods = [('append', 6),
+               ('extend', [6, 6]),
+               ('insert', (0, 6)),
+               ('remove', 6),
+               ('pop', None),
+               ('clear', None),
+               ('index', 6),
+               ('count', 6),
+               ('sort', None),
+               ('reverse', None),
+               ('copy', None)]
+    results = {}
 
-    results[method_name] = {
-        'dynamic': [dyn_sml, dyn_med, dyn_lrg],
-        'native': [nat_sml, nat_med, nat_lrg],
-    }
+    for method_name, value in methods:
+        dyn_sml, nat_sml = test_method_runtime(method_name, 100, value)
+        dyn_med, nat_med = test_method_runtime(method_name, 10000, value)
+        dyn_lrg, nat_lrg = test_method_runtime(method_name, 1000000, value)
+
+        results[method_name] = {
+            'dynamic': [dyn_sml, dyn_med, dyn_lrg],
+            'native': [nat_sml, nat_med, nat_lrg],
+        }
+
+    return results
 
 
-results = {}
-format_method('append', 5)
-print(results)
+print(compare_public_methods())
