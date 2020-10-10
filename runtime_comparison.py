@@ -54,8 +54,6 @@ def comp_public_methods():
     results = {}  # Stores the runtimes
 
     for method_name, value, num_times in methods:
-        print(f'Running method {method_name}')
-
         # Create the starting arrays for the comparisons
         dyn_sml, dyn_med, dyn_lrg = DynamicArray(), DynamicArray(), DynamicArray()
         nat_sml, nat_med, nat_lrg = list(), list(), list()
@@ -98,4 +96,16 @@ def comp_public_methods():
     return results
 
 
-print(comp_public_methods())
+result = comp_public_methods()  # Calculate runtimes
+
+# Print results separated by method
+print(f'{"":<30}n = {SMALL:<11}n = {MEDIUM:<11}n = {LARGE:<11}')
+for method, times in result.items():
+    print(f'{method:<10}', end='')
+    for implementation, time in times.items():
+        if implementation == 'dynamic':
+            print(f'{"| DynamicArray":<20}{time[0]:<15.2f}{time[1]:<15.2f}{time[2]:<15.2f}')
+        else:
+            print(f'{"":<10}{"| Native List":<20}{time[0]:<15.2f}{time[1]:<15.2f}{time[2]:<15.2f}')
+    print(f'{"":-<75}')
+
